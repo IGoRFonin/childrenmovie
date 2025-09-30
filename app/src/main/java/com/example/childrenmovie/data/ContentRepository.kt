@@ -13,12 +13,16 @@ import kotlinx.coroutines.flow.flowOn
 class ContentRepository(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
-    private val moshi: Moshi
+    private val moshi: Moshi,
+    private val settingsManager: SettingsManager
 ) {
 
     // Функция, которая возвращает поток данных
-    fun getContent(url: String): Flow<List<ContentItem>> = flow {
-        // 1. Сначала пытаемся загрузить данные из кеша и сразу отдать их
+    fun getContent(): Flow<List<ContentItem>> = flow {
+        // 1. Берем URL из настроек
+        val contentUrl = settingsManager.getContentUrl()
+
+        // 2. Сначала пытаемся загрузить данные из кеша и сразу отдать их
         val cachedJson = localDataSource.loadContent()
         if (cachedJson != null) {
             try {
@@ -29,9 +33,9 @@ class ContentRepository(
             }
         }
 
-        // 2. Затем всегда идем в сеть за свежими данными
+        // 3. Затем всегда идем в сеть за свежими данными
         try {
-            val remoteJson = remoteDataSource.fetchContent(url)
+            val remoteJson = remoteDataSource.fetchContent(contentUrl)
             val remoteContent = parseJson(remoteJson)
 
             // 3. Сохраняем свежие данные в кеш
