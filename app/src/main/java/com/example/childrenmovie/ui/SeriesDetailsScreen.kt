@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.childrenmovie.data.ContentRepository
@@ -27,10 +26,9 @@ sealed interface SeriesUiState {
 
 // ViewModel для экрана деталей
 class SeriesDetailsViewModel(
-    savedStateHandle: SavedStateHandle,
+    private val seriesId: String,
     private val repository: ContentRepository
 ) : ViewModel() {
-    private val seriesId: String = savedStateHandle.get<String>("seriesId")!!
 
     private val _uiState = MutableStateFlow<SeriesUiState>(SeriesUiState.Loading)
     val uiState: StateFlow<SeriesUiState> = _uiState.asStateFlow()
@@ -68,8 +66,6 @@ fun SeriesDetailsScreen(
         // Заголовок
         item {
             Text(series.title, style = MaterialTheme.typography.headlineMedium)
-            Spacer(Modifier.height(8.dp))
-            Text(series.description, style = MaterialTheme.typography.bodyMedium)
             Spacer(Modifier.height(16.dp))
             Text("Эпизоды:", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))

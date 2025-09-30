@@ -43,6 +43,7 @@ import com.example.childrenmovie.ui.PinDialog
 import com.example.childrenmovie.ui.theme.ChildrenMovieTheme
 import okhttp3.OkHttpClient
 import android.widget.Toast
+import java.util.concurrent.TimeUnit
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.ui.input.pointer.pointerInput
 import com.example.childrenmovie.model.PARENTAL_PIN
@@ -60,7 +61,11 @@ class MainActivity : ComponentActivity() {
         // В больших проектах для этого используют Hilt/Dagger
 
         val settingsManager = SettingsManager(applicationContext)
-        val okHttpClient = OkHttpClient()
+        val okHttpClient = OkHttpClient.Builder()
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .build()
         val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
         val remoteDataSource = RemoteDataSource(okHttpClient, moshi)
         val localDataSource = LocalDataSource(applicationContext)
@@ -166,16 +171,14 @@ class MainActivity : ComponentActivity() {
                             route = Screen.SeriesDetails.route,
                             arguments = listOf(navArgument("seriesId") { type = NavType.StringType })
                         ) { backStackEntry ->
-                            // ViewModel для этого экрана создается с правильным SavedStateHandle
+                            // Получаем seriesId из аргументов навигации
+                            val seriesId = backStackEntry.arguments?.getString("seriesId") ?: ""
+
                             val viewModel: SeriesDetailsViewModel = viewModel(
                                 factory = object : androidx.lifecycle.ViewModelProvider.Factory {
                                     override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
-                                        // Используем savedStateHandle напрямую из backStackEntry
                                         @Suppress("UNCHECKED_CAST")
-                                        return SeriesDetailsViewModel(
-                                            backStackEntry.savedStateHandle,
-                                            repository
-                                        ) as T
+                                        return SeriesDetailsViewModel(seriesId, repository) as T
                                     }
                                 }
                             )
@@ -209,12 +212,14 @@ class MainActivity : ComponentActivity() {
                             route = Screen.Player.route,
                             arguments = listOf(navArgument("encodedUrl") { type = NavType.StringType })
                         ) { backStackEntry ->
+                            // Получаем encodedUrl из аргументов навигации
+                            val encodedUrl = backStackEntry.arguments?.getString("encodedUrl") ?: ""
+
                             val viewModel: PlayerViewModel = viewModel(
                                 factory = object : androidx.lifecycle.ViewModelProvider.Factory {
                                     override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
-                                        // Используем savedStateHandle напрямую из backStackEntry
                                         @Suppress("UNCHECKED_CAST")
-                                        return PlayerViewModel(backStackEntry.savedStateHandle, repository) as T
+                                        return PlayerViewModel(encodedUrl, repository) as T
                                     }
                                 }
                             )
