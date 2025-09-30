@@ -50,6 +50,8 @@ import com.example.childrenmovie.model.PARENTAL_PIN
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -257,12 +259,21 @@ class MainActivity : ComponentActivity() {
 
                         // Маршрут для настроек
                         composable(Screen.Settings.route) {
+                            val coroutineScope = rememberCoroutineScope()
                             SettingsScreen(
                                 currentUrl = settingsManager.getContentUrl(),
                                 onSave = { newUrl ->
                                     settingsManager.saveContentUrl(newUrl)
                                     Toast.makeText(applicationContext, "Настройки сохранены", Toast.LENGTH_SHORT).show()
                                     navController.popBackStack()
+                                },
+                                onReset = {
+                                    coroutineScope.launch {
+                                        settingsManager.resetToDefault()
+                                        repository.clearCache()
+                                        Toast.makeText(applicationContext, "Сброшено к умолчанию", Toast.LENGTH_SHORT).show()
+                                        navController.popBackStack()
+                                    }
                                 }
                             )
                         }

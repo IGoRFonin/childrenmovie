@@ -18,4 +18,8 @@ class SettingsManager(context: Context) {
     fun getContentUrl(): String {
         return prefs.getString(KEY_CONTENT_URL, DEFAULT_CONTENT_URL) ?: DEFAULT_CONTENT_URL
     }
+
+    fun resetToDefault() {
+        prefs.edit().remove(KEY_CONTENT_URL).apply()
+    }
 }

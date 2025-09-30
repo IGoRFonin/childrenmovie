@@ -22,31 +22,52 @@ class ContentRepository(
         // 1. Берем URL из настроек
         val contentUrl = settingsManager.getContentUrl()
 
-        // 2. Сначала пытаемся загрузить данные из кеша и сразу отдать их
+        // 2. Проверяем кеш и его метаданные
         val cachedJson = localDataSource.loadContent()
-        if (cachedJson != null) {
+        val cachedUrl = localDataSource.loadCacheUrl()
+        val cachedVersion = localDataSource.loadCacheVersion()
+
+        // 3. Проверяем, актуален ли кеш (URL не изменился)
+        var shouldUseCachedData = false
+        if (cachedJson != null && cachedUrl == contentUrl) {
+            // URL совпадает, кеш актуален
             try {
                 val cachedContent = parseJson(cachedJson)
                 emit(cachedContent.content) // Отдаем кешированные данные
+                shouldUseCachedData = true
             } catch (e: Exception) {
-                // Ошибка парсинга кеша, ничего страшного, просто идем в сеть
+                // Ошибка парсинга кеша, очистим его и загрузим из сети
+                localDataSource.clearCache()
             }
+        } else if (cachedJson != null && cachedUrl != contentUrl) {
+            // URL изменился, очищаем старый кеш
+            localDataSource.clearCache()
         }
 
-        // 3. Затем всегда идем в сеть за свежими данными
+        // 4. Загружаем данные из сети
         try {
             val remoteJson = remoteDataSource.fetchContent(contentUrl)
             val remoteContent = parseJson(remoteJson)
 
-            // 3. Сохраняем свежие данные в кеш
-            localDataSource.saveContent(remoteJson)
+            // 5. Проверяем версию и обновляем кеш только если нужно
+            val shouldUpdateCache = cachedVersion == null ||
+                                   remoteContent.version > cachedVersion ||
+                                   cachedUrl != contentUrl
 
-            // 4. Отдаем свежие данные
-            emit(remoteContent.content)
+            if (shouldUpdateCache) {
+                localDataSource.saveContent(remoteJson)
+                localDataSource.saveCacheVersion(remoteContent.version)
+                localDataSource.saveCacheUrl(contentUrl)
+            }
+
+            // 6. Эмитим данные из сети только если они отличаются от кеша
+            if (!shouldUseCachedData || remoteContent.version > (cachedVersion ?: 0.0)) {
+                emit(remoteContent.content)
+            }
         } catch (e: Exception) {
-            // Если кеша не было и сеть не удалась, можно сообщить об ошибке
-            if (cachedJson == null) {
-                throw e // Пробрасываем ошибку дальше
+            // Если кеша не было и сеть не удалась, пробрасываем ошибку
+            if (!shouldUseCachedData) {
+                throw e
             }
         }
     }.flowOn(Dispatchers.IO) // Весь flow будет выполняться в фоновом потоке
@@ -60,5 +81,10 @@ class ContentRepository(
     // Простая обертка для получения URL видео
     suspend fun getVideoUrl(pageUrl: String): String {
         return remoteDataSource.fetchVideoUrl(pageUrl)
+    }
+
+    // Очистка кеша
+    suspend fun clearCache() {
+        localDataSource.clearCache()
     }
 }

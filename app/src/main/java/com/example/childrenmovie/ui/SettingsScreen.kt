@@ -10,7 +10,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun SettingsScreen(
     currentUrl: String,
-    onSave: (String) -> Unit
+    onSave: (String) -> Unit,
+    onReset: () -> Unit
 ) {
     // Локальное состояние для текста в поле ввода
     var urlText by remember { mutableStateOf(currentUrl) }
@@ -36,6 +37,15 @@ fun SettingsScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Сохранить и обновить")
+        }
+
+        Spacer(Modifier.height(8.dp))
+
+        OutlinedButton(
+            onClick = { onReset() },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Сбросить к умолчанию")
         }
     }
 }
