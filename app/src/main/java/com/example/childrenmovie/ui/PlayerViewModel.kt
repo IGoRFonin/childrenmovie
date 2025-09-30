@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets
 // Состояния для экрана плеера
 sealed interface PlayerUiState {
     object Loading : PlayerUiState
-    data class Success(val videoUrl: String) : PlayerUiState
+    data class Success(val videoUrl: String, val pageUrl: String) : PlayerUiState
     data class Error(val message: String) : PlayerUiState
 }
 
@@ -47,7 +47,7 @@ class PlayerViewModel(
                 // Запрашиваем прямую ссылку на видео у репозитория
                 val directVideoUrl = repository.getVideoUrl(pageUrl)
                 Log.d(TAG, "✅ Успешно получен URL видео: $directVideoUrl")
-                _uiState.value = PlayerUiState.Success(directVideoUrl)
+                _uiState.value = PlayerUiState.Success(directVideoUrl, pageUrl)
             } catch (e: Exception) {
                 Log.e(TAG, "❌ Ошибка при получении URL видео: ${e.message}", e)
                 Log.e(TAG, "❌ Stack trace: ${e.stackTraceToString()}")

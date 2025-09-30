@@ -48,6 +48,8 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.ui.input.pointer.pointerInput
 import com.example.childrenmovie.model.PARENTAL_PIN
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -56,6 +58,14 @@ class MainActivity : ComponentActivity() {
 
         // Включаем полноэкранный режим
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        // Скрываем системные бары (status bar и navigation bar)
+        val windowInsetsController = WindowInsetsControllerCompat(window, window.decorView)
+        windowInsetsController.apply {
+            hide(WindowInsetsCompat.Type.systemBars())
+            // Immersive mode: бары появляются при свайпе и снова скрываются
+            systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
 
         // --- СОЗДАНИЕ ЗАВИСИМОСТЕЙ (РУЧНОЕ ВНЕДРЕНИЕ) ---
         // В больших проектах для этого используют Hilt/Dagger
@@ -235,7 +245,7 @@ class MainActivity : ComponentActivity() {
                                     }
                                 }
                                 is PlayerUiState.Success -> {
-                                    PlayerScreen(videoUrl = state.videoUrl)
+                                    PlayerScreen(videoUrl = state.videoUrl, pageUrl = state.pageUrl)
                                 }
                                 is PlayerUiState.Error -> {
                                     Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
