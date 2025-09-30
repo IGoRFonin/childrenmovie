@@ -16,7 +16,6 @@ data class ContentItem(
     @field:Json(name = "id") val id: String,
     @field:Json(name = "title") val title: String,
     @field:Json(name = "posterUrl") val posterUrl: String,
-    @field:Json(name = "description") val description: String,
 
     // Это поле будет null, если type == "movie"
     @field:Json(name = "episodes") val episodes: List<Episode>? = null,
