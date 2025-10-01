@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets
 sealed interface PlayerUiState {
     object Loading : PlayerUiState
     data class Success(val videoUrl: String, val pageUrl: String) : PlayerUiState
+    object Closing : PlayerUiState  // Промежуточная фаза закрытия плеера
     data class Error(val message: String) : PlayerUiState
 }
 
@@ -54,5 +55,21 @@ class PlayerViewModel(
                 _uiState.value = PlayerUiState.Error(e.message ?: "Failed to get video URL")
             }
         }
+    }
+
+    /**
+     * Инициирует процесс закрытия плеера
+     * Переводит UI в состояние Closing для корректной очистки ресурсов
+     */
+    fun initiateClosing() {
+        Log.d(TAG, "🚪 Инициировано закрытие плеера")
+        _uiState.value = PlayerUiState.Closing
+    }
+
+    /**
+     * Вызывается PlayerScreen после полного освобождения ресурсов
+     */
+    fun onPlayerFullyClosed() {
+        Log.d(TAG, "✅ Плеер полностью закрыт, ресурсы освобождены")
     }
 }

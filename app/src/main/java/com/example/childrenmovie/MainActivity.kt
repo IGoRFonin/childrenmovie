@@ -247,7 +247,29 @@ class MainActivity : ComponentActivity() {
                                     }
                                 }
                                 is PlayerUiState.Success -> {
-                                    PlayerScreen(videoUrl = state.videoUrl, pageUrl = state.pageUrl)
+                                    PlayerScreen(
+                                        videoUrl = state.videoUrl,
+                                        pageUrl = state.pageUrl,
+                                        onBackPressed = {
+                                            // Инициируем контролируемое закрытие
+                                            viewModel.initiateClosing()
+                                        },
+                                        onPlayerClosed = {
+                                            // Плеер сообщает, что ресурсы освобождены
+                                            viewModel.onPlayerFullyClosed()
+                                            // Навигация происходит только ПОСЛЕ полной очистки
+                                            navController.popBackStack()
+                                        }
+                                    )
+                                }
+                                is PlayerUiState.Closing -> {
+                                    // Показываем черный экран во время закрытия
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .background(Color.Black)
+                                    )
+                                    // PlayerScreen будет удален из композиции → запустится onDispose
                                 }
                                 is PlayerUiState.Error -> {
                                     Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {

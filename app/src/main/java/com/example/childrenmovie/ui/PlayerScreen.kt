@@ -3,6 +3,7 @@ package com.example.childrenmovie.ui
 import android.os.Handler
 import android.os.Looper
 import android.widget.FrameLayout
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -26,8 +27,18 @@ import androidx.media3.ui.PlayerView
 import kotlinx.coroutines.delay
 
 @Composable
-fun PlayerScreen(videoUrl: String, pageUrl: String) {
+fun PlayerScreen(
+    videoUrl: String,
+    pageUrl: String,
+    onPlayerClosed: () -> Unit = {},
+    onBackPressed: () -> Unit = {}
+) {
     val context = LocalContext.current
+
+    // Перехватываем системную кнопку "Назад"
+    BackHandler {
+        onBackPressed()
+    }
 
     // Храним ссылку на PlayerView для принудительного обновления layout
     val playerViewRef = remember { mutableStateOf<PlayerView?>(null) }
@@ -108,6 +119,9 @@ fun PlayerScreen(videoUrl: String, pageUrl: String) {
             handler.removeCallbacksAndMessages(null)
             // Очень важно освободить ресурсы плеера!
             exoPlayer.release()
+
+            // Уведомляем о завершении очистки
+            onPlayerClosed()
         }
     }
 
