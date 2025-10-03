@@ -7,7 +7,9 @@ import com.squareup.moshi.Json
 // Этот класс представляет корневую структуру всего JSON-файла
 data class ContentRoot(
     @field:Json(name = "version") val version: Double,
-    @field:Json(name = "content") val content: List<ContentItem>
+    @field:Json(name = "content") val content: List<ContentItem>,
+    @field:Json(name = "apkVersion") val apkVersion: String? = null,
+    @field:Json(name = "apkUrl") val apkUrl: String? = null
 )
 
 // Этот класс описывает один элемент в списке "content": либо сериал, либо фильм
@@ -30,4 +32,12 @@ data class Episode(
     @field:Json(name = "title") val title: String,
     @field:Json(name = "pageUrl") val pageUrl: String,
     @field:Json(name = "posterUrl") val posterUrl: String? = null
+)
+
+// Информация о доступном обновлении APK
+data class AppUpdateInfo(
+    val currentVersion: String,
+    val availableVersion: String,
+    val downloadUrl: String,
+    val isUpdateAvailable: Boolean
 )

@@ -1,0 +1,28 @@
+{
+  "version": 1.0,
+  "apkVersion": "1.0.5",
+  "apkUrl": "https://github.com/yourusername/childrenmovie/releases/download/v1.0.5/app-release.apk",
+  "content": [
+    {
+      "type": "series",
+      "id": "smeshariki",
+      "title": "Смешарики",
+      "posterUrl": "https://example.com/posters/smeshariki.jpg",
+      "episodes": [
+        {
+          "id": "ep1",
+          "title": "Серия 1",
+          "pageUrl": "https://ok.ru/video/123456789",
+          "posterUrl": "https://example.com/posters/smeshariki_ep1.jpg"
+        }
+      ]
+    },
+    {
+      "type": "movie",
+      "id": "moana",
+      "title": "Моана",
+      "posterUrl": "https://example.com/posters/moana.jpg",
+      "pageUrl": "https://ok.ru/video/987654321"
+    }
+  ]
+}

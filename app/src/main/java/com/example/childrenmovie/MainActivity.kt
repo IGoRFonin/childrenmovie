@@ -26,6 +26,7 @@ import com.example.childrenmovie.data.ContentRepository
 import com.example.childrenmovie.data.LocalDataSource
 import com.example.childrenmovie.data.RemoteDataSource
 import com.example.childrenmovie.data.SettingsManager
+import com.example.childrenmovie.data.UpdateRepository
 import androidx.compose.foundation.background
 import androidx.compose.ui.graphics.Color
 import com.example.childrenmovie.ui.GalleryGrid
@@ -40,6 +41,7 @@ import com.example.childrenmovie.ui.SeriesDetailsViewModel
 import com.example.childrenmovie.ui.SeriesUiState
 import com.example.childrenmovie.ui.SettingsScreen
 import com.example.childrenmovie.ui.PinDialog
+import com.example.childrenmovie.ui.UpdateViewModel
 import com.example.childrenmovie.ui.theme.ChildrenMovieTheme
 import okhttp3.OkHttpClient
 import android.widget.Toast
@@ -82,6 +84,7 @@ class MainActivity : ComponentActivity() {
         val remoteDataSource = RemoteDataSource(okHttpClient, moshi)
         val localDataSource = LocalDataSource(applicationContext)
         val repository = ContentRepository(remoteDataSource, localDataSource, moshi, settingsManager)
+        val updateRepository = UpdateRepository(remoteDataSource, settingsManager, moshi)
 
         setContent {
             ChildrenMovieTheme {
@@ -282,6 +285,17 @@ class MainActivity : ComponentActivity() {
                         // Маршрут для настроек
                         composable(Screen.Settings.route) {
                             val coroutineScope = rememberCoroutineScope()
+
+                            val updateViewModel: UpdateViewModel = viewModel(
+                                factory = object : androidx.lifecycle.ViewModelProvider.Factory {
+                                    override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
+                                        @Suppress("UNCHECKED_CAST")
+                                        return UpdateViewModel(application, updateRepository) as T
+                                    }
+                                }
+                            )
+                            val updateState by updateViewModel.updateState.collectAsState()
+
                             SettingsScreen(
                                 currentUrl = settingsManager.getContentUrl(),
                                 onSave = { newUrl ->
@@ -296,6 +310,16 @@ class MainActivity : ComponentActivity() {
                                         Toast.makeText(applicationContext, "Сброшено к умолчанию", Toast.LENGTH_SHORT).show()
                                         navController.popBackStack()
                                     }
+                                },
+                                updateState = updateState,
+                                onCheckUpdate = {
+                                    updateViewModel.checkForUpdate()
+                                },
+                                onDownloadUpdate = { url ->
+                                    updateViewModel.downloadUpdate(url)
+                                },
+                                onInstallUpdate = { file ->
+                                    updateViewModel.installUpdate(file)
                                 }
                             )
                         }
