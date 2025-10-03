@@ -97,3 +97,16 @@ jobs:
           git add gradle.properties content.json
           git commit -m "chore: bump version to ${{ steps.version.outputs.VERSION_NAME }} (build ${{ steps.increment_version.outputs.NEW_VERSION_CODE }})"
           git push origin HEAD:main
+
+      - name: Deploy content.json to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          publish_branch: gh-pages
+          keep_files: false
+          enable_jekyll: false
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'Deploy content.json for version ${{ steps.version.outputs.VERSION_NAME }}'
+          include_files: 'content.json'
