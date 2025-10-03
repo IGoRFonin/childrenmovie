@@ -12,8 +12,8 @@ android {
         applicationId = "com.example.childrenmovie"
         minSdk = 24
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = project.property("VERSION_CODE").toString().toInt()
+        versionName = project.property("VERSION_NAME").toString()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
