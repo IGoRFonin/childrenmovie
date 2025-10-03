@@ -28,5 +28,6 @@ data class ContentItem(
 data class Episode(
     @field:Json(name = "id") val id: String,
     @field:Json(name = "title") val title: String,
-    @field:Json(name = "pageUrl") val pageUrl: String
+    @field:Json(name = "pageUrl") val pageUrl: String,
+    @field:Json(name = "posterUrl") val posterUrl: String? = null
 )

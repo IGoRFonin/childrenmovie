@@ -67,7 +67,7 @@ class SeriesDetailsViewModel(
 @Composable
 fun EpisodeCard(
     episodeTitle: String,
-    seriesPosterUrl: String,
+    posterUrl: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -78,7 +78,7 @@ fun EpisodeCard(
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(seriesPosterUrl)
+                    .data(posterUrl)
                     .crossfade(true)
                     .build(),
                 contentDescription = episodeTitle,
@@ -114,7 +114,7 @@ fun SeriesDetailsScreen(
         items(series.episodes.orEmpty(), key = { it.id }) { episode ->
             EpisodeCard(
                 episodeTitle = episode.title,
-                seriesPosterUrl = series.posterUrl,
+                posterUrl = episode.posterUrl ?: series.posterUrl,
                 onClick = { onEpisodeClick(episode.pageUrl) }
             )
         }
