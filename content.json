@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 3.1,
   "apkVersion": "1.0.1",
   "apkUrl": "https://github.com/IGoRFonin/childrenmovie/releases/download/v1.0.1/app-release.apk",
   "content": [
@@ -24,11 +24,73 @@
       ]
     },
     {
+      "type": "series",
+      "id": "sara_utka",
+      "title": "Сара и утка",
+      "posterUrl": "https://i.mycdn.me/getVideoPreview?id=7999000742591&idx=9&type=39&tkn=b0JPkH8iRFbAKCPG-tnzTmb9vBQ&fn=vid_w",
+      "episodes": [
+        {
+          "id": "ep1",
+          "title": "Серия 1",
+          "posterUrl": null,
+          "pageUrl": "https://vkvideo.ru/video_ext.php?oid=-94568544&id=456249886"
+        },
+        {
+          "id": "ep2",
+          "title": "Серия 2",
+          "posterUrl": null,
+          "pageUrl": "https://vkvideo.ru/video_ext.php?oid=-94568544&id=456249887"
+        }
+      ]
+    },
+    {
       "type": "movie",
       "id": "lion_king",
       "title": "Король лев 1",
       "posterUrl": "https://i.mycdn.me/getVideoPreview?id=2466274347644&idx=1&type=39&tkn=YfyBJqGFg7SnPDIoMrdhj2McEN0&fn=vid_w",
       "pageUrl": "https://vkvideo.ru/video_ext.php?oid=-213373960&id=456239154"
+    },
+    {
+      "type": "movie",
+      "id": "krtec",
+      "title": "Кротик",
+      "posterUrl": "https://i.mycdn.me/getVideoPreview?id=5205312276993&idx=0&type=39&tkn=Wo0uCZXex9YrFPc9Yna1Hcl4XDo&fn=vid_w",
+      "pageUrl": "https://vkvideo.ru/video_ext.php?oid=-194175662&id=456239626"
+    },
+    {
+      "type": "movie",
+      "id": "kot_leo",
+      "title": "Кот леопольд",
+      "posterUrl": "https://i.mycdn.me/getVideoPreview?id=934990383705&idx=8&type=39&tkn=ufcafgeeUXMg-ILXuWv7eJ5hz_4&fn=vid_w",
+      "pageUrl": "https://vkvideo.ru/video_ext.php?oid=-147875243&id=456252030"
+    },
+    {
+      "type": "movie",
+      "id": "cheburashka",
+      "title": "Чебурашка",
+      "posterUrl": "https://i.mycdn.me/getVideoPreview?id=3460435151592&idx=0&type=39&tkn=e-nDzV8XIU2v3CmXar7pBz_KKD4&fn=vid_w",
+      "pageUrl": "https://vkvideo.ru/video_ext.php?oid=-10469881&id=456239864"
+    },
+    {
+      "type": "movie",
+      "id": "kroska_enot",
+      "title": "Крошка Енот",
+      "posterUrl": "https://i.mycdn.me/getVideoPreview?id=3617645660770&idx=0&type=39&tkn=YJ_ySBmFvc5znI8UMc6KZ4Zob4g&fn=vid_w",
+      "pageUrl": "https://vkvideo.ru/video_ext.php?oid=-24371598&id=456277051"
+    },
+    {
+      "type": "movie",
+      "id": "chudesa_na_virajah",
+      "title": "Чудеса на виражах",
+      "posterUrl": "https://i.mycdn.me/getVideoPreview?id=4796310751868&idx=0&type=39&tkn=-coYV4LAwi2UkjtT3IIoAMMWFrM&fn=vid_w",
+      "pageUrl": "https://vkvideo.ru/video_ext.php?oid=-80021931&id=456240681"
+    },
+    {
+      "type": "movie",
+      "id": "101_dalm",
+      "title": "101 Далматинец",
+      "posterUrl": "https://i.mycdn.me/getVideoPreview?id=4358113790597&idx=0&type=39&tkn=Kicn9Xbr1qC9HVyQnDixRR6yDHo&fn=vid_w",
+      "pageUrl": "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456239258"
     }
   ]
 }
